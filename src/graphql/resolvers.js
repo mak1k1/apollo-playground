@@ -1,34 +1,36 @@
-const books = [
-  {
-    id: 1,
-    title: "The Awakening",
-    author: { id: 1, name: "Kate Chopin" },
-  },
-  {
-    id: 2,
-    title: "City of Glass",
-    author: { id: 1, name: "Paul Auster" },
-  },
-]
+const { Authors, Books } = require('../db/index')
 
 const resolvers = {
   Query: {
-    books: () => books,
+    books: async () => await Books.find({}),
+    authors: async () => await Authors.find({}),
   },
   Mutation: {
-    addAuthor: (root, {input}) => {
-      return {
-      code: '200',
-      success: true,
-      message: 'Author created successfully',
-      author: {id: 3, name: input.name}}
+    addAuthor: async (_, {input}) => {
+      try {
+        const author = await Authors.create({name: input.name})
+        return {
+          code: '200',
+          success: true,
+          message: 'Author created successfully',
+          author: {id: author.id, name: author.name}
+        }        
+      }
+      catch(err) {
+        return {
+          code: err.extensions.response.status,
+          success: false,
+          message: err.extensions.response.body,
+          author: null
+        }
+      }
     },
-    addBook: (title) => {
+    addBook: (_, {input}) => {
       return {
         code: '200',
         success: true,
         message: 'Je to v pici drahi veriaci',
-        book: {id: 3, title: title}}   
+        book: {id: 3, title: input.title}}   
     },
   }
 }

@@ -14,16 +14,22 @@ const typeDefs = gql`
 
   type Query {
     books: [Book]
+    authors: [Author]
   }
 
-  input AuthorInput {
-    name: String
+  input CreateAuthorInput {
+    name: String!
     books: [ID]
   }
 
+  input CreateBookInput {
+    title: String!
+    author: ID
+  }
+
   type Mutation {
-    addAuthor(input: AuthorInput): AddAuthorMutationResponse
-    addBook(title: String): AddBookMutationResponse
+    addAuthor(input: CreateAuthorInput): AddAuthorMutationResponse
+    addBook(input: CreateBookInput): AddBookMutationResponse
   }
 
   interface MutationResponse {
