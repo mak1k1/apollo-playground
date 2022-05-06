@@ -15,6 +15,8 @@ const typeDefs = gql`
   type Query {
     books: [Book]
     authors: [Author]
+    book(id: ID!): Book
+    author: Author
   }
 
   input CreateAuthorInput {
