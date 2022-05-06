@@ -1,4 +1,7 @@
-const { Authors, Books } = require('../db/index')
+const { default: mongoose } = require("mongoose")
+const { Authors, Books } = require("../db/index")
+
+
 
 const resolvers = {
   Query: {
@@ -6,17 +9,16 @@ const resolvers = {
     authors: async () => await Authors.find({}),
   },
   Mutation: {
-    addAuthor: async (_, {input}) => {
+    addAuthor: async (_, { input }) => {
       try {
-        const author = await Authors.create({name: input.name})
+        const author = await Authors.create({ name: input.name })
         return {
           code: 200,
           success: true,
-          message: 'Author created successfully',
-          author: {id: author.id, name: author.name}
-        }        
-      }
-      catch(err) {
+          message: "Author created successfully",
+          author: { id: author.id, name: author.name },
+        }
+      } catch (err) {
         return {
           code: err.extensions.response.status,
           success: false,
@@ -25,13 +27,33 @@ const resolvers = {
         }
       }
     },
-    addBook: (_, {input}) => {
-      return {
-        code: 200,
-        success: true,
-        message: 'Je to v pici drahi veriaci',
-        book: {id: 3, title: input.title}}   
+    addBook: async (_, { input }) => {
+      try {
+        const book = await Books.create({title: input.title, author: null})
+        const bookAuthor = await Authors.findById(input.author).exec()
+        book["author"] = input.author
+        book.save()
+
+        return {
+          code: 200,
+          success: true,
+          message: "Book created successfully",
+          book: { id: book.id, title: book.title, author: bookAuthor},
+        }
+      } catch (err) {
+        return {
+          code: err.extensions.response.status,
+          success: false,
+          message: err.extensions.response.body,
+          author: null
+        }
+      }
     },
+  },
+  Book: {
+    author: async ({author}) => {
+      return await Authors.findById(author).exec()
+    }
   }
 }
 
