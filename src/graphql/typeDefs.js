@@ -16,7 +16,7 @@ const typeDefs = gql`
     books: [Book]
     authors: [Author]
     book(id: ID!): Book
-    author: Author
+    author(id: ID!): Author
   }
 
   input CreateAuthorInput {

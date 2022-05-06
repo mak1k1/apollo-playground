@@ -5,6 +5,7 @@ const resolvers = {
     books: async () => await Books.find({}),
     authors: async () => await Authors.find({}),
     book: async (_, { id }) => await Books.findById(id),
+    author: async(_, { id }) => await Authors.findById(id),
   },
   Mutation: {
     addAuthor: async (_, { input }) => {
@@ -53,6 +54,11 @@ const resolvers = {
       return await Authors.findById(author)
     },
   },
+  Author: {
+    books: async({ id }) => {
+      return await Books.find({author: id})
+    }
+  }
 }
 
 module.exports = resolvers
