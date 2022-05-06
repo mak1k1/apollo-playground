@@ -33,20 +33,20 @@ const typeDefs = gql`
   }
 
   interface MutationResponse {
-    code: String!
+    code: Int!
     success: Boolean!
     message: String!
   }
 
   type AddBookMutationResponse implements MutationResponse {
-    code: String!
+    code: Int!
     success: Boolean!
     message: String!
     book: Book
   }
 
   type AddAuthorMutationResponse implements MutationResponse {
-    code: String!
+    code: Int!
     success: Boolean!
     message: String!
     author: Author

@@ -10,7 +10,7 @@ const resolvers = {
       try {
         const author = await Authors.create({name: input.name})
         return {
-          code: '200',
+          code: 200,
           success: true,
           message: 'Author created successfully',
           author: {id: author.id, name: author.name}
@@ -27,7 +27,7 @@ const resolvers = {
     },
     addBook: (_, {input}) => {
       return {
-        code: '200',
+        code: 200,
         success: true,
         message: 'Je to v pici drahi veriaci',
         book: {id: 3, title: input.title}}   
