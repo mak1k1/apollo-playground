@@ -29,9 +29,15 @@ const typeDefs = gql`
     author: ID
   }
 
+  input UpdateAuthorInput {
+    id: ID!
+    name: String
+  } 
+
   type Mutation {
-    addAuthor(input: CreateAuthorInput): AddAuthorMutationResponse
+    addAuthor(input: CreateAuthorInput): AuthorMutationResponse
     addBook(input: CreateBookInput): AddBookMutationResponse
+    updateAuthor(input: UpdateAuthorInput): AuthorMutationResponse
   }
 
   interface MutationResponse {
@@ -47,7 +53,7 @@ const typeDefs = gql`
     book: Book
   }
 
-  type AddAuthorMutationResponse implements MutationResponse {
+  type AuthorMutationResponse implements MutationResponse {
     code: Int!
     success: Boolean!
     message: String!

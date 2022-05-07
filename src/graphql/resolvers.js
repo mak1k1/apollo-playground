@@ -1,4 +1,6 @@
+const { default: mongoose } = require("mongoose")
 const { Authors, Books } = require("../db/index")
+const { isString } = require('../helpers')
 
 const resolvers = {
   Query: {
@@ -40,6 +42,46 @@ const resolvers = {
           book: { id: book.id, title: book.title, author: bookAuthor },
         }
       } catch (err) {
+        return {
+          code: err.extensions.response.status,
+          success: false,
+          message: err.extensions.response.body,
+          author: null,
+        }
+      }
+    },
+    updateAuthor: async (_, { input }) => {
+      try {
+        if(!mongoose.Types.ObjectId.isValid(input.id)) {
+          return {
+            code: 400,
+            success: false,
+            message: "Wrong ID format",
+            author: null
+          }
+        }
+        const author = await Authors.findById(input.id)
+        console.log(author)
+        if(author === null) {
+          return {
+            code: 400,
+            success: false,
+            message: "Author not found",
+            author: null
+          }
+        }
+        if(input.name && isString(input.name)) {
+          author.name = input.name
+        }
+        author.save()
+        return {
+          code: 200,
+          success: true,
+          message: "Author updated successfully",
+          author: { id: author.id, name: author.name },
+        }
+      } catch (err) {
+        console.log(err)
         return {
           code: err.extensions.response.status,
           success: false,
